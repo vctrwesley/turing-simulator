@@ -1,24 +1,27 @@
-import Layout from '../components/layout/Layout';
-import { useState, useEffect } from 'react';
-import { runTuringApi } from '../services/turingApi';
-import Tape from '../components/Tape';
+import Layout from "../components/layout/Layout";
+import { useState, useEffect } from "react";
+import { runTuringApi } from "../services/turingApi";
+import Tape from "../components/Tape";
 
 const Home = () => {
-  const [input, setInput] = useState('');
-  const [initialState, setInitialState] = useState('qi');
-  const [finalState, setFinalState] = useState('qf');
-  const [bodyTransitions, setBodyTransitions] = useState('');
+  const [input, setInput] = useState("");
+  const [initialState, setInitialState] = useState("qi");
+  const [finalState, setFinalState] = useState("qf");
+  const [bodyTransitions, setBodyTransitions] = useState("");
   const [response, setResponse] = useState<any>(null);
   const [currentStep, setCurrentStep] = useState(0);
   const [isPlaying, setIsPlaying] = useState(false);
   const [tapeContent, setTapeContent] = useState<string[]>([]);
   const [cursorPosition, setCursorPosition] = useState<number>(-1);
 
+  // Inicializa a fita com espaços extras ao redor do input
   const initializeTape = (input: string) => {
-    const tape = `____${input}____`.split('');
+    const tape = `____${input}____`.split(""); // Fita com espaços extras
     setTapeContent(tape);
+    setCursorPosition(4); // Coloca o cursor na posição inicial
   };
 
+  // Submete os dados para a API e processa a resposta
   const handleSubmit = async () => {
     const requestData = {
       input,
@@ -34,93 +37,84 @@ const Home = () => {
       console.log("Resultado da API:", result);
 
       setResponse(result);
-      setCurrentStep(0); // Inicia a simulação a partir do primeiro passo
-      setIsPlaying(false); // Pausa a execução no início
-
-      // Inicializa a fita com espaços extras ao redor e configura o cursor
-      const tape = `____${input}____`.split('');
-      setTapeContent(tape); // Atualiza a fita no estado
-
-      // Determina a posição inicial do cursor (primeiro caractere inserido)
-      const cursorPos = tape.findIndex(char => char !== '_');
-      console.log("Posição inicial do cursor:", cursorPos);
-
-      setCursorPosition(cursorPos); // Atualiza a posição do cursor no estado
-
-    } catch (err: any) {
+      setCurrentStep(0); // Reinicia para o primeiro passo
+      setIsPlaying(false); // Pausa no início
+      initializeTape(input); // Reinicia a fita com o input
+    } catch (err) {
       console.error("Erro na submissão:", err);
       alert("Erro ao processar a Máquina de Turing! Verifique os dados e tente novamente.");
     }
   };
 
+  // Atualiza a fita e a posição do cursor com base no passo atual
+  const updateTapeAndCursor = (step: number) => {
+    const stepData = response?.turingExecutionSteps[step];
+    if (stepData) {
+      // Atualiza os valores da fita
+      const newTapeContent = tapeContent.slice();
+      const tapeArray = stepData.tapeContent.split("");
+
+      // Atualiza os valores da fita sem alterar seu tamanho
+      tapeArray.forEach((value, index) => {
+        if (index >= 4 && index < tapeArray.length - 4) {
+          newTapeContent[index] = value; // Substitui os valores da fita
+        }
+      });
+
+      setTapeContent(newTapeContent);
+
+      // Atualiza a posição do cursor
+      const direction = stepData.nextTransition.includes(">")
+        ? 1
+        : stepData.nextTransition.includes("<")
+        ? -1
+        : 0;
+
+      setCursorPosition((prev) => Math.max(0, Math.min(prev + direction, tapeContent.length - 1)));
+    }
+  };
+
+  // Executa o próximo passo
   const handleNextStep = () => {
     if (response && currentStep < response.turingExecutionSteps.length - 1) {
       const nextStep = currentStep + 1;
       setCurrentStep(nextStep);
-  
-      // Atualiza a fita com a nova transição
-      const newTapeContent = response.turingExecutionSteps[nextStep]?.tapeContent.split('') || [];
-      setTapeContent(newTapeContent);
-  
-      // Atualiza a posição do cursor após a transição
-      const currentStepData = response?.turingExecutionSteps[nextStep];
-      if (currentStepData) {
-        let cursorPos = newTapeContent.findIndex((char: string) => char === currentStepData.readSymbol);
-  
-        // Verifica se o cursor está em uma posição válida
-        cursorPos = Math.max(0, Math.min(cursorPos, newTapeContent.length - 1));  // Garante que a posição esteja dentro dos limites
-  
-        // Ajuste a posição do cursor com base na direção da transição
-        if (currentStepData.direction === '<') {
-          cursorPos = Math.max(0, cursorPos - 1);  // Movendo o cursor para a esquerda
-        } else if (currentStepData.direction === '>') {
-          cursorPos = Math.min(newTapeContent.length - 1, cursorPos + 1);  // Movendo o cursor para a direita
-        }
-  
-        // Atualize o estado do cursor
-        setCursorPosition(cursorPos);
-      }
+
+      // Atualiza a fita e o cursor
+      updateTapeAndCursor(nextStep);
     }
   };
-  
 
+  // Retrocede um passo
   const handlePreviousStep = () => {
     if (currentStep > 0) {
       const prevStep = currentStep - 1;
       setCurrentStep(prevStep);
-      setTapeContent(response.turingExecutionSteps[prevStep]?.tapeContent.split('') || []);
-      updateCursorPosition(prevStep);
+
+      // Atualiza a fita e o cursor
+      updateTapeAndCursor(prevStep);
     }
   };
 
-  const updateCursorPosition = (step: number) => {
-    const currentStepData = response?.turingExecutionSteps[step];
-    if (currentStepData) {
-      const cursorPos = tapeContent.findIndex(char => char === currentStepData.readSymbol);
-      setCursorPosition(cursorPos);
-    }
-  };
-
+  // Play/Pause da simulação
   const handlePlayPause = () => {
-    setIsPlaying((prev) => !prev);
+    if (isPlaying) {
+      setIsPlaying(false); // Pausa a execução
+    } else {
+      setIsPlaying(true); // Inicia a execução
+    }
   };
 
-  const handleInputChange = (value: string) => {
-    setInput(value);
-    initializeTape(value);
-  };
-
+  // Garante a execução contínua no modo Play
   useEffect(() => {
-    let interval: ReturnType<typeof setInterval> | undefined;
+    let interval: ReturnType<typeof setInterval>;
     if (isPlaying) {
       interval = setInterval(() => {
         handleNextStep();
       }, 1000);
-    } else if (!isPlaying && currentStep !== 0) {
-      clearInterval(interval);  // Pausa a execução
     }
     return () => clearInterval(interval);
-  }, [isPlaying, currentStep, tapeContent, response]);
+  }, [isPlaying, currentStep]);
 
   return (
     <Layout>
@@ -132,7 +126,10 @@ const Home = () => {
             <input
               type="text"
               value={input}
-              onChange={(e) => handleInputChange(e.target.value)}
+              onChange={(e) => {
+                setInput(e.target.value);
+                initializeTape(e.target.value);
+              }}
               placeholder="Ex: 1011"
             />
           </label>
@@ -167,10 +164,7 @@ const Home = () => {
 
         <div>
           <h3>Fita da Máquina</h3>
-          <Tape
-            tapeContent={tapeContent}
-            cursorPosition={cursorPosition}
-          />
+          <Tape tapeContent={tapeContent} cursorPosition={cursorPosition} />
         </div>
 
         {response && (
@@ -181,7 +175,7 @@ const Home = () => {
                 Passo Anterior
               </button>
               <button onClick={handlePlayPause}>
-                {isPlaying ? 'Pausar' : 'Play'}
+                {isPlaying ? "Pausar" : "Play"}
               </button>
               <button
                 onClick={handleNextStep}
@@ -191,15 +185,15 @@ const Home = () => {
               </button>
             </div>
             <p>
-              <strong>Estado Atual:</strong>{' '}
+              <strong>Estado Atual:</strong>{" "}
               {response.turingExecutionSteps[currentStep]?.currentState}
             </p>
             <p>
-              <strong>Leitura:</strong>{' '}
+              <strong>Leitura:</strong>{" "}
               {response.turingExecutionSteps[currentStep]?.readSymbol}
             </p>
             <p>
-              <strong>Fita Atual:</strong>{' '}
+              <strong>Fita Atual:</strong>{" "}
               {response.turingExecutionSteps[currentStep]?.tapeContent}
             </p>
           </div>
