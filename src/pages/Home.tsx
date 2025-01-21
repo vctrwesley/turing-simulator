@@ -5,14 +5,14 @@ import Tape from '../components/Tape';
 
 const Home = () => {
   const [input, setInput] = useState('');
-  const [initialState, setInitialState] = useState('');
-  const [finalState, setFinalState] = useState('');
+  const [initialState, setInitialState] = useState('qi');
+  const [finalState, setFinalState] = useState('qf');
   const [bodyTransitions, setBodyTransitions] = useState('');
   const [response, setResponse] = useState<any>(null);
   const [currentStep, setCurrentStep] = useState(0);
   const [isPlaying, setIsPlaying] = useState(false);
   const [tapeContent, setTapeContent] = useState<string[]>([]);
-
+  const [cursorPosition, setCursorPosition] = useState<number>(-1);
 
   const initializeTape = (input: string) => {
     const tape = `____${input}____`.split('');
@@ -26,48 +26,78 @@ const Home = () => {
       finalState,
       bodyTransitions,
     };
-  
+
     console.log("Dados enviados para o backend:", requestData);
-  
+
     try {
       const result = await runTuringApi(requestData);
       console.log("Resultado da API:", result);
-  
+
       setResponse(result);
       setCurrentStep(0); // Inicia a simulação a partir do primeiro passo
       setIsPlaying(false); // Pausa a execução no início
-  
+
       // Inicializa a fita com espaços extras ao redor e configura o cursor
       const tape = `____${input}____`.split('');
       setTapeContent(tape); // Atualiza a fita no estado
-  
+
       // Determina a posição inicial do cursor (primeiro caractere inserido)
       const cursorPos = tape.findIndex(char => char !== '_');
       console.log("Posição inicial do cursor:", cursorPos);
-  
+
       setCursorPosition(cursorPos); // Atualiza a posição do cursor no estado
-  
+
     } catch (err: any) {
       console.error("Erro na submissão:", err);
       alert("Erro ao processar a Máquina de Turing! Verifique os dados e tente novamente.");
     }
   };
-  
-  
 
   const handleNextStep = () => {
     if (response && currentStep < response.turingExecutionSteps.length - 1) {
       const nextStep = currentStep + 1;
       setCurrentStep(nextStep);
-      setTapeContent(response.turingExecutionSteps[nextStep]?.tapeContent.split('') || []);
+  
+      // Atualiza a fita com a nova transição
+      const newTapeContent = response.turingExecutionSteps[nextStep]?.tapeContent.split('') || [];
+      setTapeContent(newTapeContent);
+  
+      // Atualiza a posição do cursor após a transição
+      const currentStepData = response?.turingExecutionSteps[nextStep];
+      if (currentStepData) {
+        let cursorPos = newTapeContent.findIndex((char: string) => char === currentStepData.readSymbol);
+  
+        // Verifica se o cursor está em uma posição válida
+        cursorPos = Math.max(0, Math.min(cursorPos, newTapeContent.length - 1));  // Garante que a posição esteja dentro dos limites
+  
+        // Ajuste a posição do cursor com base na direção da transição
+        if (currentStepData.direction === '<') {
+          cursorPos = Math.max(0, cursorPos - 1);  // Movendo o cursor para a esquerda
+        } else if (currentStepData.direction === '>') {
+          cursorPos = Math.min(newTapeContent.length - 1, cursorPos + 1);  // Movendo o cursor para a direita
+        }
+  
+        // Atualize o estado do cursor
+        setCursorPosition(cursorPos);
+      }
     }
   };
+  
 
   const handlePreviousStep = () => {
     if (currentStep > 0) {
       const prevStep = currentStep - 1;
       setCurrentStep(prevStep);
       setTapeContent(response.turingExecutionSteps[prevStep]?.tapeContent.split('') || []);
+      updateCursorPosition(prevStep);
+    }
+  };
+
+  const updateCursorPosition = (step: number) => {
+    const currentStepData = response?.turingExecutionSteps[step];
+    if (currentStepData) {
+      const cursorPos = tapeContent.findIndex(char => char === currentStepData.readSymbol);
+      setCursorPosition(cursorPos);
     }
   };
 
@@ -85,19 +115,12 @@ const Home = () => {
     if (isPlaying) {
       interval = setInterval(() => {
         handleNextStep();
-        // Atualiza o cursor a cada passo
-        const currentStepData = response?.turingExecutionSteps[currentStep];
-        const newCursorPosition = tapeContent.findIndex(char => char === currentStepData?.readSymbol);
-        setCursorPosition(newCursorPosition);  // Atualiza o cursor
       }, 1000);
     } else if (!isPlaying && currentStep !== 0) {
       clearInterval(interval);  // Pausa a execução
     }
     return () => clearInterval(interval);
   }, [isPlaying, currentStep, tapeContent, response]);
-  
-
-  const [cursorPosition, setCursorPosition] = useState<number>(-1);  // Inicializa o cursor fora da fita
 
   return (
     <Layout>

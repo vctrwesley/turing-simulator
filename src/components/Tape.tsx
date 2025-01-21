@@ -27,6 +27,7 @@ const Tape = ({ tapeContent, cursorPosition }: TapeProps) => {
               background: index === cursorPosition ? "#0053B8" : "white",
               margin: "0 2px",
               color: index === cursorPosition ? "white" : "black",
+              fontWeight: index === cursorPosition ? "bold" : "normal", // Destaque para o cursor
             }}
           >
             {char}
