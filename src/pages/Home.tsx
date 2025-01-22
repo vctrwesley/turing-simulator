@@ -22,7 +22,7 @@ const Home = () => {
     setTapeContent(tape);
     setCursorPosition(4); // Coloca o cursor na posição inicial
   };
-  
+
 
   // Submete os dados para a API e processa a resposta
   const handleSubmit = async () => {
@@ -115,15 +115,6 @@ const Home = () => {
       const nextStep = currentStep + 1;
       setCurrentStep(nextStep);
       updateTapeAndCursor(nextStep);
-    }
-  };
-
-  // Retrocede um passo
-  const handlePreviousStep = () => {
-    if (currentStep > 0) {
-      const prevStep = currentStep - 1;
-      setCurrentStep(prevStep);
-      updateTapeAndCursor(prevStep);
     }
   };
 
