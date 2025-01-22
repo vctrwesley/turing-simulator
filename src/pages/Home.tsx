@@ -17,6 +17,9 @@ const Home = () => {
   const [isFirstPrevious, setIsFirstPrevious] = useState(false);
   const [isFirstNext, setIsFirstNext] = useState(true);
 
+  const [statusMessage, setStatusMessage] = useState(""); // Para armazenar a mensagem de status
+  const [statusClass, setStatusClass] = useState(""); // Para armazenar a classe CSS
+
   // Inicializa a fita com espaços extras ao redor do input
   const initializeTape = (input: string) => {
     const tape = `____${input}____`.split(""); // Fita com espaços extras
@@ -116,6 +119,17 @@ const Home = () => {
       const nextStep = currentStep + 1;
       setCurrentStep(nextStep);
       updateTapeAndCursor(nextStep);
+      
+      // Verificar estado final quando todos os passos forem concluídos
+      if (nextStep === response.turingExecutionSteps.length - 1) {
+        if (response.accepted) {
+          setStatusMessage("Processo aprovado! Entrada aceita pela máquina.");
+          setStatusClass("success");
+        } else {
+          setStatusMessage("Processo reprovado! Entrada rejeitada pela máquina.");
+          setStatusClass("error");
+        }
+      }
     }
   };
 
@@ -224,6 +238,12 @@ const Home = () => {
             </p>
           </div>
         )}
+
+        {statusMessage && (
+                <div className={`status-message ${statusClass}`}>
+                  {statusMessage}
+                </div>
+              )}
       </div>
     </Layout>
   );

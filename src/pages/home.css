@@ -29,8 +29,8 @@
   padding: 8px;
   margin-bottom: 14px;
   border-radius: 8px;
-  border: 1px solid #ccc;
-  background: #3b3b3b;
+  border: 1px solid var(--border);
+  background: var(--bg-secondary);
 }
 
 .container {
@@ -41,21 +41,31 @@
   padding: 8px;
   margin-bottom: 14px;
   border-radius: 8px;
-  border: 1px solid #ccc;
-  background: #3b3b3b;
+  border: 1px solid var(--border);
+  background: var(--bg-secondary);
   resize: vertical;
   min-height: 150px;
 }
 
 .form button {
   padding: 12px 24px;
-  background: #4caf50;
-  color: #fff;
+  background: var(--primary-color);
+  color: var(--text-secondary);
   border: none;
-  border-radius: 16px;
+  border-radius: 24px;
   width: 100%;
 }
 
 .form button:hover {
-  background: #45a049;
+  background: var(--primary-hover-color);
+}
+
+.success {
+  color: green;
+  font-weight: bold;
+}
+
+.error {
+  color: red;
+  font-weight: bold;
 }
