@@ -55,7 +55,7 @@ const Home = () => {
       const tapeArray = stepData.tapeContent.split("");
 
       // Atualiza os valores da fita sem alterar seu tamanho
-      tapeArray.forEach((value, index) => {
+      tapeArray.forEach((value: string, index: number) => {
         if (index >= 4 && index < tapeArray.length - 4) {
           newTapeContent[index] = value; // Substitui os valores da fita
         }
