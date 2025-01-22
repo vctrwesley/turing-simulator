@@ -2,6 +2,7 @@ import Layout from "../components/layout/Layout";
 import { useState, useEffect } from "react";
 import { runTuringApi } from "../services/turingApi";
 import Tape from "../components/Tape";
+import './home.css';
 
 const Home = () => {
   const [input, setInput] = useState("");
@@ -138,9 +139,34 @@ const Home = () => {
     <Layout>
       <div>
         <h1>Máquina de Turing</h1>
-        <div>
-          <label>
-            Input:
+        <div className="form">
+          <div className="container-itens">
+            <div className="container-input">
+              <label>
+                Estado Inicial:
+              </label>
+              <input
+                type="text"
+                value={initialState}
+                onChange={(e) => setInitialState(e.target.value)}
+                placeholder="Ex: qi"/>
+            </div>
+            <div className="container-input">
+              <label>
+                Estado Final:
+              </label>
+              <input
+                type="text"
+                value={finalState}
+                onChange={(e) => setFinalState(e.target.value)}
+                placeholder="Ex: qf"/>
+            </div>
+          </div>
+          <div className="container">
+            <div className="container-input entrada">
+              <label>
+              Entrada:
+            </label>
             <input
               type="text"
               value={input}
@@ -148,35 +174,18 @@ const Home = () => {
                 setInput(e.target.value);
                 initializeTape(e.target.value);
               }}
-              placeholder="Ex: 1011"
-            />
-          </label>
-          <label>
-            Estado Inicial:
-            <input
-              type="text"
-              value={initialState}
-              onChange={(e) => setInitialState(e.target.value)}
-              placeholder="Ex: qi"
-            />
-          </label>
-          <label>
-            Estado Final:
-            <input
-              type="text"
-              value={finalState}
-              onChange={(e) => setFinalState(e.target.value)}
-              placeholder="Ex: qf"
-            />
-          </label>
-          <label>
-            Transições:
-            <textarea
-              value={bodyTransitions}
-              onChange={(e) => setBodyTransitions(e.target.value)}
-              placeholder="Digite as transições..."
-            />
-          </label>
+              placeholder="Ex: 1011"/>
+            </div>
+            <div className="container-input">
+              <label>
+                Transições:
+              </label>
+              <textarea
+                value={bodyTransitions}
+                onChange={(e) => setBodyTransitions(e.target.value)}
+                placeholder="Digite as transições..."/>
+            </div>
+          </div>
           <button onClick={handleSubmit}>Rodar Máquina</button>
         </div>
 
