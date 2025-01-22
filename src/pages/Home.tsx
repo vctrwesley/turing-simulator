@@ -13,6 +13,8 @@ const Home = () => {
   const [isPlaying, setIsPlaying] = useState(false);
   const [tapeContent, setTapeContent] = useState<string[]>([]);
   const [cursorPosition, setCursorPosition] = useState<number>(-1);
+  const [isFirstPrevious, setIsFirstPrevious] = useState(false);
+  const [isFirstNext, setIsFirstNext] = useState(true);
 
   // Inicializa a fita com espaços extras ao redor do input
   const initializeTape = (input: string) => {
@@ -42,7 +44,9 @@ const Home = () => {
       initializeTape(input); // Reinicia a fita com o input
     } catch (err) {
       console.error("Erro na submissão:", err);
-      alert("Erro ao processar a Máquina de Turing! Verifique os dados e tente novamente.");
+      alert(
+        "Erro ao processar a Máquina de Turing! Verifique os dados e tente novamente."
+      );
     }
   };
 
@@ -50,27 +54,57 @@ const Home = () => {
   const updateTapeAndCursor = (step: number) => {
     const stepData = response?.turingExecutionSteps[step];
     if (stepData) {
-      // Atualiza os valores da fita
-      const newTapeContent = tapeContent.slice();
-      const tapeArray = stepData.tapeContent.split("");
+      console.log("stepData", stepData);
 
-      // Atualiza os valores da fita sem alterar seu tamanho
-      tapeArray.forEach((value: string, index: number) => {
-        if (index >= 4 && index < tapeArray.length - 4) {
-          newTapeContent[index] = value; // Substitui os valores da fita
+      // Atualiza os valores da fita com espaços extras
+      let newTapeContent = [
+        "_",
+        "_",
+        "_",
+        "_",
+        ...stepData.tapeContent.split(""),
+        "_",
+        "_",
+        "_",
+        "_",
+      ];
+      console.log("newTapeContent", newTapeContent);
+
+      let direction = 0;
+
+      // Verifica a direção e ajusta a posição do cursor
+      if (tapeContent.length !== newTapeContent.length) {
+        direction = stepData.nextTransition.includes(">")
+          ? 1
+          : stepData.nextTransition.includes("<")
+          ? -1
+          : 0;
+      } else {
+        direction = stepData.nextTransition.includes(">")
+          ? 1
+          : stepData.nextTransition.includes("<")
+          ? -1
+          : 0;
+      }
+
+      if(!isFirstPrevious && direction == -1){
+        direction = +1;
+        setIsFirstPrevious(true);
+        setIsFirstNext(false);
+      }
+      if(!isFirstNext && direction == +1){
+        if(step == response?.turingExecutionSteps.length -1){
+          direction = 0;
+        }else{
+          direction = -1;
         }
-      });
+        setIsFirstNext(true);
+        setIsFirstPrevious(false);
+      }
+
+      setCursorPosition(cursorPosition + direction);
 
       setTapeContent(newTapeContent);
-
-      // Atualiza a posição do cursor
-      const direction = stepData.nextTransition.includes(">")
-        ? 1
-        : stepData.nextTransition.includes("<")
-        ? -1
-        : 0;
-
-      setCursorPosition((prev) => Math.max(0, Math.min(prev + direction, tapeContent.length - 1)));
     }
   };
 
@@ -79,8 +113,6 @@ const Home = () => {
     if (response && currentStep < response.turingExecutionSteps.length - 1) {
       const nextStep = currentStep + 1;
       setCurrentStep(nextStep);
-
-      // Atualiza a fita e o cursor
       updateTapeAndCursor(nextStep);
     }
   };
@@ -90,19 +122,13 @@ const Home = () => {
     if (currentStep > 0) {
       const prevStep = currentStep - 1;
       setCurrentStep(prevStep);
-
-      // Atualiza a fita e o cursor
       updateTapeAndCursor(prevStep);
     }
   };
 
   // Play/Pause da simulação
   const handlePlayPause = () => {
-    if (isPlaying) {
-      setIsPlaying(false); // Pausa a execução
-    } else {
-      setIsPlaying(true); // Inicia a execução
-    }
+    setIsPlaying(!isPlaying);
   };
 
   // Garante a execução contínua no modo Play
@@ -111,7 +137,7 @@ const Home = () => {
     if (isPlaying) {
       interval = setInterval(() => {
         handleNextStep();
-      }, 1000);
+      }, 1000); // Intervalo de 1 segundo entre os passos
     }
     return () => clearInterval(interval);
   }, [isPlaying, currentStep]);
@@ -171,15 +197,14 @@ const Home = () => {
           <div>
             <h3>Simulação</h3>
             <div>
-              <button onClick={handlePreviousStep} disabled={currentStep === 0}>
-                Passo Anterior
-              </button>
               <button onClick={handlePlayPause}>
                 {isPlaying ? "Pausar" : "Play"}
               </button>
               <button
                 onClick={handleNextStep}
-                disabled={currentStep >= response.turingExecutionSteps.length - 1}
+                disabled={
+                  currentStep >= response.turingExecutionSteps.length - 1
+                }
               >
                 Próximo Passo
               </button>
