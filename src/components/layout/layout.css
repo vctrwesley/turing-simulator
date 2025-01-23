@@ -31,11 +31,13 @@
 @media (max-width: 1200px) {
   .main-content {
     margin: auto 80px;
+    margin-top: 80px;
   }
 }
 
 @media (max-width: 768px) {
   .main-content {
     margin: auto;
+    margin-top: 80px;
   }
 }
