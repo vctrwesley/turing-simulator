@@ -92,6 +92,24 @@
   gap: 24px;
 }
 
+.controls button {
+  padding: 12px 24px;
+  background: var(--control);
+  color: var(--text-secondary);
+  border: none;
+  border-radius: 8px;
+}
+
+.controls button:hover {
+  background: var(--control-hover);
+}
+
+.controls button:disabled {
+  background: #90909031;
+  color: #00000054;
+  cursor: not-allowed;
+}
+
 .dados-execusao {
   display: flex;
   gap: 24px;
