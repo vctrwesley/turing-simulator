@@ -50,29 +50,54 @@ const Home = () => {
   const updateTapeAndCursor = (step: number) => {
     const stepData = response?.turingExecutionSteps[step];
     if (stepData) {
-      // Atualiza os valores da fita
-      const newTapeContent = tapeContent.slice();
-      const tapeArray = stepData.tapeContent.split("");
-
-      // Atualiza os valores da fita sem alterar seu tamanho
+      const tapeArray = stepData.tapeContent.split(""); // Conteúdo da fita da API
+      const updatedTapeContent = [...tapeContent]; // Copia a fita atual para atualização
+  
+      // Calcula o comprimento do binário
+      const binaryLength = tapeArray.length;
+  
+      // Substitui o valor no início (posição 3, caso o primeiro valor não seja um número)
+      if (isNaN(parseInt(tapeArray[0]))) {
+        updatedTapeContent[3] = tapeArray[0]; // Substitui o valor na posição 3
+      }
+  
+      // Substitui o valor no final (última posição conforme o tamanho do binário)
+      if (isNaN(parseInt(tapeArray[tapeArray.length - 1]))) {
+        updatedTapeContent[3 + binaryLength] = tapeArray[tapeArray.length - 1]; // Substitui o valor na posição final
+      }
+  
+      // Atualiza os valores da fita para o restante dos valores de tapeArray
       tapeArray.forEach((value: string, index: number) => {
         if (index >= 4 && index < tapeArray.length - 4) {
-          newTapeContent[index] = value; // Substitui os valores da fita
+          // Verifica se o valor não é um número e se o valor na fita ainda não foi substituído
+          if (isNaN(parseInt(value)) && updatedTapeContent[3 + index] !== value) {
+            updatedTapeContent[3 + index] = value; // Substitui o valor se não for numérico e ainda não foi substituído
+          }
         }
       });
-
-      setTapeContent(newTapeContent);
-
+  
+      // Atualiza a fita com os novos valores
+      setTapeContent(updatedTapeContent);
+  
       // Atualiza a posição do cursor
-      const direction = stepData.nextTransition.includes(">")
-        ? 1
-        : stepData.nextTransition.includes("<")
-        ? -1
+      const direction = stepData.nextTransition.includes(">") 
+        ? 1 
+        : stepData.nextTransition.includes("<") 
+        ? -1 
         : 0;
-
-      setCursorPosition((prev) => Math.max(0, Math.min(prev + direction, tapeContent.length - 1)));
+  
+      setCursorPosition((prev) => {
+        // Calcula a nova posição com base na direção
+        const newPosition = prev + direction;
+  
+        // Garante que o cursor não ultrapasse os limites (posição 3 até 8)
+        return Math.max(3, Math.min(newPosition, 8)); // Posição mínima 3, máxima 8
+      });
     }
   };
+  
+  
+  
 
   // Executa o próximo passo
   const handleNextStep = () => {
