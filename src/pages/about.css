@@ -1,0 +1,53 @@
+/* Geral */
+.about-container {
+  padding: 20px;
+  font-family: Arial, sans-serif;
+  line-height: 1.6;
+  color: var(--text-color);
+}
+
+.about-container h1 {
+  font-size: 2.5rem;
+  margin-bottom: 15px;
+  color: var(--text-color);
+}
+
+.about-container h2 {
+  font-size: 2rem;
+  margin-top: 30px;
+  margin-bottom: 15px;
+  color: var(--text-color);
+}
+
+.about-container p {
+  margin-bottom: 20px;
+  text-align: justify;
+}
+
+/* Desenvolvedores */
+.developers {
+  display: flex;
+  gap: 20px;
+  flex-wrap: wrap;
+  margin-top: 20px;
+}
+
+.developer {
+  text-align: center;
+  flex: 1 1 150px;
+}
+
+.developer-photo {
+  width: 180px;
+  height: 180px;
+  border-radius: 50%;
+  object-fit: cover;
+  margin-bottom: 4px;
+}
+
+.developer p {
+  font-size: 1rem;
+  font-weight: bold;
+  color: var(--text-color);
+  text-align: center;
+}
