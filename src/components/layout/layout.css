@@ -15,6 +15,14 @@
   color: var(--text-color);
   text-align: center;
   padding: 10px;
+  height: 64px;
+  margin-top: 80px;
+  align-content: center;
+}
+
+.footer span{
+  display: flex;
+  justify-content: center;
 }
 
 .content-wrapper {
