@@ -28,3 +28,16 @@
   font-size: 24px;
   margin: 32px;
 }
+
+.theme-toggle {
+  background: var(--primary-color);
+  color: #201B2C;
+  border: none;
+  padding: 10px 20px;
+  cursor: pointer;
+  margin-left: 20px;
+}
+
+.theme-toggle:hover {
+  background: var(--primary-hover-color);
+}

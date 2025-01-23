@@ -32,6 +32,7 @@
   border-radius: 8px;
   border: 1px solid var(--border);
   background: var(--bg-secondary);
+  color: var(--text-color);
 }
 
 .container {
@@ -46,6 +47,7 @@
   background: var(--bg-secondary);
   resize: vertical;
   min-height: 150px;
+  color: var(--text-color);
 }
 
 .form button {
