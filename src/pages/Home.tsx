@@ -44,7 +44,7 @@ const Home = () => {
     // Limpar a mensagem de status ao iniciar a submissão
     setStatusMessage("");
     setStatusClass("");
-    
+
     const requestData = {
       input,
       initialState,
@@ -246,7 +246,7 @@ const Home = () => {
         {response && (
           <div>
             <h3>Simulação</h3>
-            <div>
+            <div className="controls">
               <button onClick={handlePlayPause}>
                 {isPlaying ? "Pausar" : "Play"}
               </button>
@@ -259,18 +259,26 @@ const Home = () => {
                 Próximo Passo
               </button>
             </div>
-            <p>
-              <strong>Estado Atual:</strong>{" "}
-              {response.turingExecutionSteps[currentStep]?.currentState}
-            </p>
-            <p>
-              <strong>Leitura:</strong>{" "}
-              {response.turingExecutionSteps[currentStep]?.readSymbol}
-            </p>
-            <p>
-              <strong>Fita Atual:</strong>{" "}
-              {response.turingExecutionSteps[currentStep]?.tapeContent}
-            </p>
+            <div className="dados-execusao">
+              <div className="execucao-item">
+                <p>
+                  <strong>Estado Atual:</strong>{" "}
+                  {response.turingExecutionSteps[currentStep]?.currentState}
+                </p>
+              </div>
+              <div className="execucao-item">
+                <p>
+                  <strong>Leitura:</strong>{" "}
+                  {response.turingExecutionSteps[currentStep]?.readSymbol}
+                </p>
+              </div>
+              <div className="execucao-item">
+                <p>
+                <strong>Fita Atual:</strong>{" "}
+                  {response.turingExecutionSteps[currentStep]?.tapeContent}
+                </p>
+              </div>
+            </div>
           </div>
         )}
 
