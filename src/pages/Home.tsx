@@ -17,6 +17,20 @@ const Home = () => {
   const [isFirstPrevious, setIsFirstPrevious] = useState(false);
   const [isFirstNext, setIsFirstNext] = useState(true);
 
+  const [statusMessage, setStatusMessage] = useState(""); // Para armazenar a mensagem de status
+  const [statusClass, setStatusClass] = useState(""); // Para armazenar a classe CSS
+
+  const examples = [
+    {
+      name: "Exemplo padrão",
+      transitions: `qi,1,qi,1,>\nqi,0,qi,0,>\nqi,_,q1,Y,<\nq1,1,q1,1,<\nq1,0,q1,0,<\nq1,_,qf,X,>`
+    },
+    {
+      name: "Números binários divisíveis por 3",
+      transitions: `qi,0,qi,0,>\nqi,1,q1,1,>\nq1,0,q2,0,>\nq1,1,qi,1,>\nq2,0,q1,0,>\nq2,1,q2,1,>\nqi,_,qf,_,>`
+    }
+  ];
+
   // Inicializa a fita com espaços extras ao redor do input
   const initializeTape = (input: string) => {
     const tape = `____${input}____`.split(""); // Fita com espaços extras
@@ -27,6 +41,10 @@ const Home = () => {
 
   // Submete os dados para a API e processa a resposta
   const handleSubmit = async () => {
+    // Limpar a mensagem de status ao iniciar a submissão
+    setStatusMessage("");
+    setStatusClass("");
+    
     const requestData = {
       input,
       initialState,
@@ -116,6 +134,17 @@ const Home = () => {
       const nextStep = currentStep + 1;
       setCurrentStep(nextStep);
       updateTapeAndCursor(nextStep);
+
+      // Verificar estado final quando todos os passos forem concluídos
+      if (nextStep === response.turingExecutionSteps.length - 1) {
+        if (response.accepted) {
+          setStatusMessage("Processo aprovado! Entrada aceita pela máquina.");
+          setStatusClass("success");
+        } else {
+          setStatusMessage("Processo reprovado! Entrada rejeitada pela máquina.");
+          setStatusClass("error");
+        }
+      }
     }
   };
 
@@ -160,6 +189,26 @@ const Home = () => {
                 value={finalState}
                 onChange={(e) => setFinalState(e.target.value)}
                 placeholder="Ex: qf"/>
+            </div>
+            <div className="container-input">
+              <label>Exemplos:</label>
+              <select
+                onChange={(e) => {
+                  const selectedExample = examples.find(
+                    (example) => example.name === e.target.value
+                  );
+                  if (selectedExample) {
+                    setBodyTransitions(selectedExample.transitions);
+                  }
+                }}
+              >
+                <option value="">Selecione um exemplo</option>
+                {examples.map((example) => (
+                  <option key={example.name} value={example.name}>
+                    {example.name}
+                  </option>
+                ))}
+              </select>
             </div>
           </div>
           <div className="container">
@@ -224,6 +273,12 @@ const Home = () => {
             </p>
           </div>
         )}
+
+        {statusMessage && (
+                <div className={`status-message ${statusClass}`}>
+                  {statusMessage}
+                </div>
+              )}
       </div>
     </Layout>
   );

@@ -1,16 +1,18 @@
 /* src/components/layout/layout.css */
 .navbar {
-  background: #333;
-  color: white;
+  background: var(--bg-secondary);
+  color: var(--text-color);
   height: 80px;
+  width: 100%;
   display: flex;
   align-items: center;
   justify-content: space-between;
+  position: fixed;
 }
 
 .footer {
-  background-color: #333;
-  color: white;
+  background-color: var(--bg-secondary);
+  color: var(--text-color);
   text-align: center;
   padding: 10px;
 }
@@ -22,17 +24,20 @@
 .main-content {
   flex: 1;
   margin: auto 180px;
+  margin-top: 80px;
   padding: 24px;
 }
 
 @media (max-width: 1200px) {
   .main-content {
     margin: auto 80px;
+    margin-top: 80px;
   }
 }
 
 @media (max-width: 768px) {
   .main-content {
     margin: auto;
+    margin-top: 80px;
   }
 }

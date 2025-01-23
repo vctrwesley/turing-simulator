@@ -13,18 +13,31 @@
 }
 
 .nav-link {
-  color: white;
+  color: var(--text-color);
   text-decoration: none;
   font-size: 18px;
 }
 
 .nav-link:hover {
-  color: blue;
+  color: var(--primary-color);
 }
 
 .navbar h1 {
-  color: white;
+  color: var(--text-color);
   text-decoration: none;
   font-size: 24px;
   margin: 32px;
+}
+
+.theme-toggle {
+  background: var(--primary-color);
+  color: #201B2C;
+  border: none;
+  padding: 10px 20px;
+  cursor: pointer;
+  margin-left: 20px;
+}
+
+.theme-toggle:hover {
+  background: var(--primary-hover-color);
 }
