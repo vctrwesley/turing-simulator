@@ -25,7 +25,8 @@
   margin-bottom: 8px;
 }
 
-.container-input input {
+.container-input input,
+.container-input select {
   padding: 8px;
   margin-bottom: 14px;
   border-radius: 8px;
