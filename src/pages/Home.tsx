@@ -298,8 +298,14 @@ const Home = () => {
               </div>
               <div className="execucao-item">
                 <p>
+                  <strong>Número de Passos:</strong>{" "}
+                  {currentStep + 1}
+                </p>
+              </div>
+              <div className="execucao-item">
+                <p>
                 <strong>Fita Atual:</strong>{" "}
-                  {response.turingExecutionSteps[currentStep]?.tapeContent}
+                {response.turingExecutionSteps[currentStep]?.tapeContent.replace(/ /g, '_')}
                 </p>
               </div>
             </div>
