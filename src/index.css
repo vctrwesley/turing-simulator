@@ -10,6 +10,8 @@
   --text-color: #ffffff;
   --text-secondary: #201B2C;
   --border: #5d5d5dbb;
+  --control: #CACBCD;
+  --control-hover: #909090;
 
 
   color-scheme: light dark;
@@ -66,7 +68,7 @@ button:hover {
 }
 button:focus,
 button:focus-visible {
-  outline: 4px auto -webkit-focus-ring-color;
+  outline: 2px auto -webkit-focus-ring-color;
 }
 
 @media (prefers-color-scheme: light) {

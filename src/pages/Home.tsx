@@ -28,6 +28,22 @@ const Home = () => {
     {
       name: "Números binários divisíveis por 3",
       transitions: `qi,0,qi,0,>\nqi,1,q1,1,>\nq1,0,q2,0,>\nq1,1,qi,1,>\nq2,0,q1,0,>\nq2,1,q2,1,>\nqi,_,qf,_,>`
+    },
+    {
+      name: "Decimal para binário",
+      transitions: `qi,0,qi,0,>\nqi,1,qi,1,>\nqi,2,qi,2,>\nqi,3,qi,3,>\nqi,4,qi,4,>\nqi,5,qi,5,>\nqi,6,qi,6,>\nqi,7,qi,7,>\nqi,8,qi,8,>\nqi,9,qi,9,>\nqi,_,halve,0,<\nhalve,0,halve,0,<\nhalve,1,addHalf,0,>\nhalve,2,halve,1,<\nhalve,3,addHalf,1,>\nhalve,4,halve,2,<\nhalve,5,addHalf,2,>\nhalve,6,halve,3,<\nhalve,7,addHalf,3,>\nhalve,8,halve,4,<\nhalve,9,addHalf,4,>\naddHalf,0,jump,5,<\naddHalf,1,jump,6,<\naddHalf,2,jump,7,<\naddHalf,3,jump,8,<\naddHalf,4,jump,9,<\njump,0,halve,0,<\njump,1,halve,1,<\njump,2,halve,2,<\njump,3,halve,3,<\njump,4,halve,4,<\nhalve,_,removezero,_,>\nremovezero,0,removezero,_,>\nremovezero,1,goBack,1,>\nremovezero,2,goBack,2,>\nremovezero,3,goBack,3,>\nremovezero,4,goBack,4,>\nremovezero,5,goBack,5,>\nremovezero,6,goBack,6,>\nremovezero,7,goBack,7,>\nremovezero,8,goBack,8,>\nremovezero,9,goBack,9,>\nremovezero,_,qf,_,>\ngoBack,0,goBack,0,>\ngoBack,1,goBack,1,>\ngoBack,2,goBack,2,>\ngoBack,3,goBack,3,>\ngoBack,4,goBack,4,>\ngoBack,5,goBack,5,>\ngoBack,6,goBack,6,>\ngoBack,7,goBack,7,>\ngoBack,8,goBack,8,>\ngoBack,9,goBack,9,>\ngoBack,_,rest,_,<\nrest,0,rest0,_,>\nrest0,_,setrest0,_,>\nrest,5,rest1,_,>\nrest1,_,setrest1,_,>\nsetrest0,0,setrest0,0,>\nsetrest0,1,setrest0,1,>\nsetrest1,0,setrest1,0,>\nsetrest1,1,setrest1,1,>\nsetrest0,_,continue,0,<\nsetrest1,_,continue,1,<\ncontinue,0,continue,0,<\ncontinue,1,continue,1,<\ncontinue,_,continue2,_,<\ncontinue2,_,halve,0,<`
+    },
+    {
+      name: "Quantidade par de zeros",
+      transitions: `qi,0,q1,0,>\nq1,0,qi,0,>\nqi,1,qi,1,>\nq1,1,q1,1,>\nqi,_,qf,_,-`
+    },
+    {
+      name: "Duplicar string binária",
+      transitions: `qi,0,qi,0,>\nqi,1,qi,1,>\nqi,o,qi,0,>\nqi,i,qi,1,>\nqi,_,copying_from_right_to_left,_,<\ncopying_from_right_to_left,0,copying_0_to_the_right,o,>\ncopying_from_right_to_left,1,copying_1_to_the_right,i,>\ncopying_from_right_to_left,o,copying_from_right_to_left,o,<\ncopying_from_right_to_left,i,copying_from_right_to_left,i,<\ncopying_0_to_the_right,_,copying_from_right_to_left,o,<\ncopying_1_to_the_right,_,copying_from_right_to_left,i,<\ncopying_0_to_the_right,0,copying_0_to_the_right,0,>\ncopying_0_to_the_right,1,copying_0_to_the_right,1,>\ncopying_0_to_the_right,o,copying_0_to_the_right,o,>\ncopying_0_to_the_right,i,copying_0_to_the_right,i,>\ncopying_1_to_the_right,0,copying_1_to_the_right,0,>\ncopying_1_to_the_right,1,copying_1_to_the_right,1,>\ncopying_1_to_the_right,o,copying_1_to_the_right,o,>\ncopying_1_to_the_right,i,copying_1_to_the_right,i,>\ncopying_from_right_to_left,_,removing_the_markers,_,>\nremoving_the_markers,o,removing_the_markers,0,>\nremoving_the_markers,i,removing_the_markers,1,>\nremoving_the_markers,0,removing_the_markers,0,<\nremoving_the_markers,1,removing_the_markers,1,<\nremoving_the_markers,_,qf,_,>`
+    },
+    {
+      name: "Palíndromo binário",
+      transitions: `qi,0,qRight0,_,>\nqRight0,0,qRight0,0,>\nqRight0,1,qRight0,1,>\nqi,1,qRight1,_,>\nqRight1,0,qRight1,0,>\nqRight1,1,qRight1,1,>\nqRight0,_,qSearch0L,_,<\nqSearch0L,0,q1,_,<\nqRight1,_,qSearch1L,_,<\nqSearch1L,1,q1,_,<\nq1,0,qLeft0,_,<\nqLeft0,0,qLeft0,0,<\nqLeft0,1,qLeft0,1,<\nq1,1,qLeft1,_,<\nqLeft1,0,qLeft1,0,<\nqLeft1,1,qLeft1,1,<\nqLeft0,_,qSearch0R,_,>\nqSearch0R,0,qi,_,>\nqLeft1,_,qSearch1R,_,>\nqSearch1R,1,qi,_,>\nqSearch0R,1,qReject,1,-\nqSearch1R,0,qReject,0,-\nqSearch0L,1,qReject,1,-\nqSearch1L,0,qReject,0,-\nqi,_,qf,_,-\nq1,_,qf,_,-\nqSearch0L,_,qf,_,-\nqSearch0R,_,qf,_,-\nqSearch1L,_,qf,_,-\nqSearch1R,_,qf,_,-`
     }
   ];
 
@@ -44,7 +60,7 @@ const Home = () => {
     // Limpar a mensagem de status ao iniciar a submissão
     setStatusMessage("");
     setStatusClass("");
-    
+
     const requestData = {
       input,
       initialState,
@@ -246,7 +262,7 @@ const Home = () => {
         {response && (
           <div>
             <h3>Simulação</h3>
-            <div>
+            <div className="controls">
               <button onClick={handlePlayPause}>
                 {isPlaying ? "Pausar" : "Play"}
               </button>
@@ -259,18 +275,26 @@ const Home = () => {
                 Próximo Passo
               </button>
             </div>
-            <p>
-              <strong>Estado Atual:</strong>{" "}
-              {response.turingExecutionSteps[currentStep]?.currentState}
-            </p>
-            <p>
-              <strong>Leitura:</strong>{" "}
-              {response.turingExecutionSteps[currentStep]?.readSymbol}
-            </p>
-            <p>
-              <strong>Fita Atual:</strong>{" "}
-              {response.turingExecutionSteps[currentStep]?.tapeContent}
-            </p>
+            <div className="dados-execusao">
+              <div className="execucao-item">
+                <p>
+                  <strong>Estado Atual:</strong>{" "}
+                  {response.turingExecutionSteps[currentStep]?.currentState}
+                </p>
+              </div>
+              <div className="execucao-item">
+                <p>
+                  <strong>Leitura:</strong>{" "}
+                  {response.turingExecutionSteps[currentStep]?.readSymbol}
+                </p>
+              </div>
+              <div className="execucao-item">
+                <p>
+                <strong>Fita Atual:</strong>{" "}
+                  {response.turingExecutionSteps[currentStep]?.tapeContent}
+                </p>
+              </div>
+            </div>
           </div>
         )}
 

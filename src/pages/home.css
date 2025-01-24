@@ -66,11 +66,72 @@
 }
 
 .success {
-  color: green;
-  font-weight: bold;
+  color: #ffffff;
+  background: green;
+  font-weight: 700;
+  padding: 10px;
+  margin: 24px 0;
+  border-radius: 8px;
+  text-align: center;
 }
 
 .error {
-  color: red;
-  font-weight: bold;
+  color: #ffffff;
+  background: red;
+  font-weight: 700;
+  padding: 10px;
+  margin: 24px 0;
+  border-radius: 8px;
+  text-align: center;
+}
+
+.controls {
+  display: flex;
+  flex-direction: row;
+  margin-top: 24px;
+  gap: 24px;
+}
+
+.controls button {
+  padding: 12px 24px;
+  background: var(--control);
+  color: var(--text-secondary);
+  border: none;
+  border-radius: 8px;
+}
+
+.controls button:hover {
+  background: var(--control-hover);
+}
+
+.controls button:disabled {
+  background: #90909031;
+  color: #00000054;
+  cursor: not-allowed;
+}
+
+.dados-execusao {
+  display: flex;
+  gap: 24px;
+  margin-top: 24px;
+}
+
+.execucao-item {
+  background-color: var(--bg-secondary);
+  color: var(--text-color);
+  padding: 10px;
+  border-radius: 8px;
+  text-align: center;
+  flex: 1;
+}
+
+.execucao-item strong {
+  display: block;
+  margin-bottom: 10px;
+  font-size: 16px;
+}
+
+.execucao-item p {
+  font-size: 40px;
+  margin: 0;
 }
